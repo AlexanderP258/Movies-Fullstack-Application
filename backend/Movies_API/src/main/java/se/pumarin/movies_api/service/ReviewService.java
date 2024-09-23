@@ -53,12 +53,21 @@ public class ReviewService implements IReviewService {
         Optional<Review> existingReview = reviewRepository.findById(new ObjectId(id));
 
         if (existingReview.isPresent()) {
+
             reviewRepository.deleteById(new ObjectId(id));
+
+
+            mongoTemplate.update(Movie.class)
+                    .matching(Criteria.where("reviewIds").is(id))
+                    .apply(new Update().pull("reviewIds", id))
+                    .first();
+
             return true;
         }
 
         return false;
     }
+
 
 
 }
