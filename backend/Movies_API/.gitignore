@@ -34,3 +34,6 @@ build/
 
 ### ENV FILES ###
 .env
+
+### Security ###
+src/main/resources/mykeystore.p12
