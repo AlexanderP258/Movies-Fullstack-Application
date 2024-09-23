@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import se.pumarin.movies_api.dto.ReviewUpdateDTO;
 import se.pumarin.movies_api.model.Review;
 import se.pumarin.movies_api.service.ReviewService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+
 
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +22,7 @@ public class ReviewController {
     private ReviewService service;
 
     @PostMapping()
+    @RateLimiter(name = "createReview", fallbackMethod = "createReviewFallback")
     public ResponseEntity<Review> createReview(@RequestBody Map<String, String> payload) {
         return new ResponseEntity<Review>(service.createReview(payload.get("reviewBody"), payload.get("imdbId")), HttpStatus.CREATED);
     }
