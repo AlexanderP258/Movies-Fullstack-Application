@@ -6,6 +6,7 @@ import se.pumarin.movies_api.model.Movie;
 import se.pumarin.movies_api.repository.MovieRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieService implements IMovieService {
@@ -16,5 +17,10 @@ public class MovieService implements IMovieService {
     @Override
     public List<Movie> allMovies(){
         return movieRepository.findAll();
+    }
+
+    @Override
+    public Optional<Movie> singleMovie(String imdbId) {
+        return movieRepository.findMovieByImdbId(imdbId);
     }
 }
