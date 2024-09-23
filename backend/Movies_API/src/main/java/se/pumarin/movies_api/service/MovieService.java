@@ -23,4 +23,9 @@ public class MovieService implements IMovieService {
     public Optional<Movie> singleMovie(String imdbId) {
         return movieRepository.findMovieByImdbId(imdbId);
     }
+
+    @Override
+    public Movie save(Movie film) {
+        return movieRepository.save(film);
+    }
 }

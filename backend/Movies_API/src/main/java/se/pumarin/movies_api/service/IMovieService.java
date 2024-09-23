@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface IMovieService {
     List<Movie> allMovies();
     Optional<Movie> singleMovie(String imdbId);
+    Movie save (Movie film);
 }

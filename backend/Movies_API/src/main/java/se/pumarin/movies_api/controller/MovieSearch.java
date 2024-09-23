@@ -8,8 +8,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import se.pumarin.movies_api.model.Movie;
 import se.pumarin.movies_api.response.ErrorResponse;
+import se.pumarin.movies_api.response.Response;
 import se.pumarin.movies_api.service.IMovieService;
+import se.pumarin.movies_api.service.MovieService;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -60,4 +63,46 @@ public class MovieSearch {
             return ResponseEntity.status(404).body(new ErrorResponse("Movie not found"));
         }
     }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<?> saveFilmById(@RequestParam(defaultValue = "movie") String movie, @PathVariable int id) {
+
+        try {
+            Optional<Movie> response = Optional.ofNullable(webClientConfig.get()
+                    .uri(film -> film
+                            .path(movie + "/" + id)
+                            .queryParam("api_key", apiKey)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(Movie.class)
+                    .block());
+
+
+            if (response.isPresent()) {
+                List<Movie> allMovies = movieService.allMovies();
+
+                for (Movie film : allMovies) {
+                    System.out.println("for each film.getId(): " + film.getExternalId());
+
+
+                    if (film.getExternalId() == response.get().getExternalId()) {
+                        return ResponseEntity.ok(new ErrorResponse("Movie already exists"));
+                    }
+                }
+
+
+                movieService.save(response.get());
+
+                return ResponseEntity.status(201).body(response.get());
+            }
+
+
+            return ResponseEntity.status(404).body(new ErrorResponse("Movie not found"));
+
+        } catch (WebClientResponseException e) {
+
+            return ResponseEntity.status(404).body(new ErrorResponse("Movie not found"));
+        }
+    }
+
 }
