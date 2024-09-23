@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface IReviewService {
     Review createReview(String reviewBody, String imdbId);
     Optional<Review> updateReview(String id, String reviewBody);
+    boolean deleteReview(String id);
 }

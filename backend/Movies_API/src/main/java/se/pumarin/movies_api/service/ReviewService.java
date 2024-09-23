@@ -20,6 +20,7 @@ public class ReviewService implements IReviewService {
         return review;
     }
 
+    @Override
     public Optional<Review> updateReview(String id, String reviewBody) {
         Optional<Review> existingReview = reviewRepository.findById(new ObjectId(id));
 
@@ -33,6 +34,17 @@ public class ReviewService implements IReviewService {
         return Optional.empty();
     }
 
+    @Override
+    public boolean deleteReview(String id) {
+        Optional<Review> existingReview = reviewRepository.findById(new ObjectId(id));
+
+        if (existingReview.isPresent()) {
+            reviewRepository.deleteById(new ObjectId(id));
+            return true;
+        }
+
+        return false;
+    }
 
 
 }
